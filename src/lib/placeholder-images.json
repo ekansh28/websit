@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Abstract grayscale texture for hero background",
+      "imageUrl": "https://images.unsplash.com/photo-1633681926019-03bd9325ec20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzYWxvbiUyMGludGVyaW9yfGVufDB8fHx8MTc2MDgyMzI1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salon interior"
+    },
+    {
+      "id": "about-img",
+      "description": "Elegant salon interior",
+      "imageUrl": "https://images.unsplash.com/photo-1626383137804-ff908d2753a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzYWxvbiUyMGludGVyaW9yfGVufDB8fHx8MTc2MDgyMzI1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salon interior"
+    },
+    {
+      "id": "gallery-1",
+      "description": "Woman with a stylish haircut",
+      "imageUrl": "https://images.unsplash.com/photo-1677107160544-6b9c52cbb2d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxoYWlyc3R5bGUlMjB3b21hbnxlbnwwfHx8fDE3NjA4OTM4ODF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hairstyle woman"
+    },
+    {
+      "id": "gallery-2",
+      "description": "Man with a fresh haircut",
+      "imageUrl": "https://images.unsplash.com/photo-1678366033925-b917160e101a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyY3V0JTIwbWFufGVufDB8fHx8MTc2MDgwODgzOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "haircut man"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Close-up of hair coloring process",
+      "imageUrl": "https://images.unsplash.com/photo-1630777690337-07a3389e7ba9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxoYWlyJTIwY29sb3Jpbmd8ZW58MHx8fHwxNzYwODg0MDUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hair coloring"
+    },
+    {
+      "id": "gallery-4",
+      "description": "Woman receiving a facial treatment",
+      "imageUrl": "https://images.unsplash.com/photo-1657757989675-a6cd679cebaf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmYWNpYWwlMjB0cmVhdG1lbnR8ZW58MHx8fHwxNzYwODYxMjc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "facial treatment"
+    },
+    {
+      "id": "gallery-5",
+      "description": "Manicure in progress",
+      "imageUrl": "https://images.unsplash.com/photo-1613457492120-4fcfbb7c3a5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWFuaWN1cmUlMjBuYWlsc3xlbnwwfHx8fDE3NjA4NzY0OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "manicure nails"
+    },
+    {
+      "id": "gallery-6",
+      "description": "Spa setting with candles and towels",
+      "imageUrl": "https://images.unsplash.com/photo-1669989179356-90e4e9003842?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzcGElMjByZWxheGF0aW9ufGVufDB8fHx8MTc2MDgzMTc4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spa relaxation"
+    }
+  ]
 }
