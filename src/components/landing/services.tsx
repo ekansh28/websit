@@ -2,8 +2,6 @@
 
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Scissors, Bath, Smile, ShowerHead, Palette, FlaskConical, Droplet, MoreHorizontal } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/use-scroll-animation';
-import { cn } from '@/lib/utils';
 
 const services = [
   { name: 'Hair Cut', icon: <Scissors className="w-8 h-8 md:w-10 md:h-10" /> },
@@ -17,11 +15,9 @@ const services = [
 ];
 
 const Services = () => {
-  const { ref, isInView } = useScrollAnimation<HTMLElement>();
-
   return (
-    <section id="services" className="py-16 md:py-32 bg-background" ref={ref}>
-      <div className={cn("container mx-auto px-4 md:px-6 opacity-0", isInView && "fade-in-up")}>
+    <section id="services" className="py-16 md:py-32 bg-background">
+      <div className="container mx-auto px-4 md:px-6">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Our Services</h2>
           <p className="text-md sm:text-lg text-foreground/80 max-w-2xl mx-auto">
