@@ -5,6 +5,7 @@ import About from '@/components/landing/about';
 import Gallery from '@/components/landing/gallery';
 import Booking from '@/components/landing/booking';
 import Footer from '@/components/landing/footer';
+import ScrollAnimation from '@/components/landing/scroll-animation';
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <Services />
         <About />
         <Gallery />
+        <ScrollAnimation />
         <Booking />
       </main>
       <Footer />

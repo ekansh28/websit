@@ -71,10 +71,10 @@ const Booking = () => {
   }, [state, toast]);
 
   return (
-    <section id="booking" className="py-16 md:py-32 bg-card">
+    <section id="booking" className="py-16 md:py-32 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center text-center">
-            <Card className="w-full max-w-2xl bg-background border-border">
+            <Card className="w-full max-w-2xl bg-card border-border">
                 <CardHeader className="text-center px-4 sm:px-6">
                     <CardTitle className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Book an Appointment</CardTitle>
                 </CardHeader>
