@@ -71,14 +71,14 @@ const Booking = () => {
   }, [state, toast]);
 
   return (
-    <section id="booking" className="py-20 md:py-32 bg-card">
+    <section id="booking" className="py-16 md:py-32 bg-card">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center text-center">
             <Card className="w-full max-w-2xl bg-background border-border">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-4xl md:text-5xl font-headline font-bold">Book an Appointment</CardTitle>
+                <CardHeader className="text-center px-4 sm:px-6">
+                    <CardTitle className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Book an Appointment</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-4 sm:px-6">
                     <form ref={formRef} action={dispatch} className="space-y-6">
                       <div className="space-y-2 text-left">
                         <Label htmlFor="name">Name</Label>
@@ -94,7 +94,7 @@ const Booking = () => {
                             {state.errors?.contact && <p className="text-sm font-medium text-destructive">{state.errors.contact[0]}</p>}
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div className="space-y-2 text-left">
                           <Label htmlFor="service">Service</Label>
                            <Select name="service">

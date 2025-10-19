@@ -3,9 +3,9 @@ import { Facebook, Twitter, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-card py-12">
+    <footer className="bg-card py-8 sm:py-12">
       <div className="container mx-auto px-4 md:px-6 text-foreground/80">
-        <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center sm:text-left">
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-white font-headline">Contact Us</h3>
             <p>123 Beauty Lane, Style City, 12345</p>
@@ -20,7 +20,7 @@ const Footer = () => {
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-white font-headline">Follow Us</h3>
-            <div className="flex space-x-4 justify-center md:justify-start">
+            <div className="flex space-x-4 justify-center sm:justify-start">
               <Link href="#" aria-label="Facebook" className="hover:text-white"><Facebook /></Link>
               <Link href="#" aria-label="Twitter" className="hover:text-white"><Twitter /></Link>
               <Link href="#" aria-label="Instagram" className="hover:text-white"><Instagram /></Link>
