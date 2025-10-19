@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Lenis from '@studio-freight/lenis';
-
+// wow
 const SmoothScrollProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const lenis = new Lenis({
