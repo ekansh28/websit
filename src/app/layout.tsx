@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import { Toaster } from "@/components/ui/toaster"
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -13,11 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="dark">
       <head>
       </head>
       <body className="font-body antialiased bg-background">
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
         <Toaster />
       </body>
     </html>
