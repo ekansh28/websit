@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useLayoutEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useToast } from "@/hooks/use-toast";
 import { bookAppointment, type BookingState } from "@/app/actions";
@@ -15,6 +15,10 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   "Hair Cut", "Spa", "Facial", "Hair Wash", "Hair Color", "Hair Treatment", "Wax", "Others",
@@ -47,6 +51,42 @@ function SubmitButton() {
   );
 }
 
+const ScissorIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <defs>
+        <linearGradient id="sheen" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+          <stop offset="50%" style={{ stopColor: '#dddddd', stopOpacity: 1 }} />
+          <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+        </linearGradient>
+      </defs>
+      <g className="scissor-group">
+        <circle cx="6" cy="6" r="3" stroke="url(#sheen)"></circle>
+        <circle cx="6" cy="18" r="3" stroke="url(#sheen)"></circle>
+        <g className="blade-1">
+          <line x1="8.12" y1="8.12" x2="12" y2="12" stroke="url(#sheen)"></line>
+          <line x1="12" y1="12" x2="22" y2="2" stroke="url(#sheen)"></line>
+        </g>
+        <g className="blade-2">
+          <line x1="8.12" y1="15.88" x2="12" y2="12" stroke="url(#sheen)"></line>
+          <line x1="12" y1="12" x2="22" y2="22" stroke="url(#sheen)"></line>
+        </g>
+      </g>
+    </svg>
+);
+
+
 const Booking = () => {
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
@@ -70,75 +110,158 @@ const Booking = () => {
     }
   }, [state, toast]);
 
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scissorRef = useRef<SVGSVGElement>(null);
+  const bookingSectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (!containerRef.current || !scissorRef.current || !bookingSectionRef.current) return;
+      
+      gsap.set(bookingSectionRef.current, { opacity: 0, y: 100 });
+      gsap.set(scissorRef.current, { scale: 0.1, opacity: 0, position: 'fixed', top: '50%', left: '50%', xPercent: -50, yPercent: -50 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          pin: true,
+        },
+      });
+
+      tl.to(scissorRef.current, {
+        scale: 1,
+        opacity: 1,
+        ease: "power2.inOut",
+      }, 0);
+
+      tl.to(scissorRef.current.querySelector('.blade-1'), {
+          rotation: -15,
+          transformOrigin: "8px 8px",
+          repeat: 3,
+          yoyo: true,
+          ease: "power1.inOut"
+      }, 0.1);
+
+      tl.to(scissorRef.current.querySelector('.blade-2'), {
+          rotation: 15,
+          transformOrigin: "8px 16px",
+          repeat: 3,
+          yoyo: true,
+          ease: "power1.inOut"
+      }, 0.1);
+      
+      tl.to(scissorRef.current.querySelector('.blade-1'), {
+        rotation: -25,
+        transformOrigin: "8px 8px",
+        duration: 0.2,
+        ease: "power3.in"
+      }, ">-0.1");
+
+      tl.to(scissorRef.current.querySelector('.blade-2'), {
+        rotation: 25,
+        transformOrigin: "8px 16px",
+        duration: 0.2,
+        ease: "power3.in"
+      }, "<");
+
+      tl.to(scissorRef.current, {
+        opacity: 0,
+        scale: 1.2,
+        duration: 0.3,
+      }, ">-0.1");
+
+      tl.to(bookingSectionRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      }, "<");
+
+
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="booking" className="py-16 md:py-32 bg-background">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-center text-center">
-            <Card className="w-full max-w-2xl bg-card border-border">
-                <CardHeader className="text-center px-4 sm:px-6">
-                    <CardTitle className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Book an Appointment</CardTitle>
-                </CardHeader>
-                <CardContent className="px-4 sm:px-6">
-                    <form ref={formRef} action={dispatch} className="space-y-6">
-                      <div className="space-y-2 text-left">
-                        <Label htmlFor="name">Name</Label>
-                        <Input id="name" name="name" placeholder="Your Name" aria-describedby="name-error"/>
-                        <div id="name-error" aria-live="polite" aria-atomic="true">
-                            {state.errors?.name && <p className="text-sm font-medium text-destructive">{state.errors.name[0]}</p>}
-                        </div>
-                      </div>
-                      <div className="space-y-2 text-left">
-                        <Label htmlFor="contact">Contact Details</Label>
-                        <Input id="contact" name="contact" placeholder="Phone or Email" aria-describedby="contact-error"/>
-                         <div id="contact-error" aria-live="polite" aria-atomic="true">
-                            {state.errors?.contact && <p className="text-sm font-medium text-destructive">{state.errors.contact[0]}</p>}
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <div className="space-y-2 text-left">
-                          <Label htmlFor="service">Service</Label>
-                           <Select name="service">
-                              <SelectTrigger id="service" aria-describedby="service-error">
-                                <SelectValue placeholder="Select a service" />
-                              </SelectTrigger>
-                            <SelectContent>
-                                {services.map((service) => (
-                                <SelectItem key={service} value={service}>
-                                    {service}
-                                </SelectItem>
-                                ))}
-                            </SelectContent>
-                            </Select>
-                           <div id="service-error" aria-live="polite" aria-atomic="true">
-                           {state.errors?.service && <p className="text-sm font-medium text-destructive">{state.errors.service[0]}</p>}
-                           </div>
-                        </div>
-                        <div className="space-y-2 text-left">
-                          <Label htmlFor="timeSlot">Time Slot</Label>
-                          <Select name="timeSlot">
-                              <SelectTrigger id="timeSlot" aria-describedby="timeSlot-error">
-                                <SelectValue placeholder="Select a time" />
-                              </SelectTrigger>
-                            <SelectContent>
-                                {timeSlots.map((slot) => (
-                                <SelectItem key={slot} value={slot}>
-                                    {slot}
-                                </SelectItem>
-                                ))}
-                            </SelectContent>
-                            </Select>
-                            <div id="timeSlot-error" aria-live="polite" aria-atomic="true">
-                            {state.errors?.timeSlot && <p className="text-sm font-medium text-destructive">{state.errors.timeSlot[0]}</p>}
-                            </div>
-                        </div>
-                      </div>
-                      <SubmitButton />
-                    </form>
-                </CardContent>
-            </Card>
-        </div>
+    <>
+      <div ref={containerRef} className="h-screen w-full bg-background relative" id="animation-container">
+         <ScissorIcon ref={scissorRef} className="w-24 h-24 md:w-32 md:h-32 text-white" />
       </div>
-    </section>
+
+      <section id="booking" ref={bookingSectionRef} className="py-16 md:py-32 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col items-center text-center">
+              <Card className="w-full max-w-2xl bg-card border-border">
+                  <CardHeader className="text-center px-4 sm:px-6">
+                      <CardTitle className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Book an Appointment</CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-4 sm:px-6">
+                      <form ref={formRef} action={dispatch} className="space-y-6">
+                        <div className="space-y-2 text-left">
+                          <Label htmlFor="name">Name</Label>
+                          <Input id="name" name="name" placeholder="Your Name" aria-describedby="name-error"/>
+                          <div id="name-error" aria-live="polite" aria-atomic="true">
+                              {state.errors?.name && <p className="text-sm font-medium text-destructive">{state.errors.name[0]}</p>}
+                          </div>
+                        </div>
+                        <div className="space-y-2 text-left">
+                          <Label htmlFor="contact">Contact Details</Label>
+                          <Input id="contact" name="contact" placeholder="Phone or Email" aria-describedby="contact-error"/>
+                           <div id="contact-error" aria-live="polite" aria-atomic="true">
+                              {state.errors?.contact && <p className="text-sm font-medium text-destructive">{state.errors.contact[0]}</p>}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                          <div className="space-y-2 text-left">
+                            <Label htmlFor="service">Service</Label>
+                             <Select name="service">
+                                <SelectTrigger id="service" aria-describedby="service-error">
+                                  <SelectValue placeholder="Select a service" />
+                                </SelectTrigger>
+                              <SelectContent>
+                                  {services.map((service) => (
+                                  <SelectItem key={service} value={service}>
+                                      {service}
+                                  </SelectItem>
+                                  ))}
+                              </SelectContent>
+                              </Select>
+                             <div id="service-error" aria-live="polite" aria-atomic="true">
+                             {state.errors?.service && <p className="text-sm font-medium text-destructive">{state.errors.service[0]}</p>}
+                             </div>
+                          </div>
+                          <div className="space-y-2 text-left">
+                            <Label htmlFor="timeSlot">Time Slot</Label>
+                            <Select name="timeSlot">
+                                <SelectTrigger id="timeSlot" aria-describedby="timeSlot-error">
+                                  <SelectValue placeholder="Select a time" />
+                                </SelectTrigger>
+                              <SelectContent>
+                                  {timeSlots.map((slot) => (
+                                  <SelectItem key={slot} value={slot}>
+                                      {slot}
+                                  </SelectItem>
+                                  ))}
+                              </SelectContent>
+                              </Select>
+                              <div id="timeSlot-error" aria-live="polite" aria-atomic="true">
+                              {state.errors?.timeSlot && <p className="text-sm font-medium text-destructive">{state.errors.timeSlot[0]}</p>}
+                              </div>
+                          </div>
+                        </div>
+                        <SubmitButton />
+                      </form>
+                  </CardContent>
+              </Card>
+          </div>
+        </div>
+      </section>
+    </>
   );
 };
 
