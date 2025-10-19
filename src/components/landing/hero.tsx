@@ -1,13 +1,18 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
+import { useScrollAnimation } from '@/hooks/use-scroll-animation';
+import { cn } from '@/lib/utils';
 
 const Hero = () => {
   const heroImage = getPlaceholderImage('hero-bg');
+  const { ref, isInView } = useScrollAnimation<HTMLElement>();
 
   return (
-    <section id="home" className="relative w-full h-[90vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center text-center">
+    <section id="home" ref={ref} className="relative w-full h-[90vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center text-center">
       {heroImage && (
         <Image
           src={heroImage.imageUrl}
@@ -19,7 +24,7 @@ const Hero = () => {
         />
       )}
       <div className="absolute inset-0 bg-black/70" />
-      <div className="relative z-10 container px-4 md:px-6">
+      <div className={cn("relative z-10 container px-4 md:px-6 opacity-0", isInView && "fade-in")}>
         <div className="flex flex-col items-center space-y-6">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-headline font-bold tracking-tighter text-white">
             DNA Salon

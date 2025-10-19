@@ -1,12 +1,17 @@
+"use client";
+
 import Image from 'next/image';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
+import { useScrollAnimation } from '@/hooks/use-scroll-animation';
+import { cn } from '@/lib/utils';
 
 const About = () => {
   const aboutImage = getPlaceholderImage('about-img');
+  const { ref, isInView } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id="about" className="py-16 md:py-32 bg-card">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="about" className="py-16 md:py-32 bg-card" ref={ref}>
+      <div className={cn("container mx-auto px-4 md:px-6 opacity-0", isInView && "fade-in-up")}>
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="space-y-4 md:space-y-6">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">About DNA Salon</h2>

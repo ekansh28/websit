@@ -88,3 +88,18 @@
     display: none;
   }
 }
+
+@layer utilities {
+  .fade-in-up {
+    animation-name: fade-in-up;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+  .fade-in {
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+}

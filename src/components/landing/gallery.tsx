@@ -1,14 +1,19 @@
+"use client";
+
 import Image from 'next/image';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
+import { useScrollAnimation } from '@/hooks/use-scroll-animation';
+import { cn } from '@/lib/utils';
 
 const galleryImageIds = ['gallery-1', 'gallery-2', 'gallery-3', 'gallery-4', 'gallery-5', 'gallery-6'];
 
 const Gallery = () => {
   const galleryImages = galleryImageIds.map(id => getPlaceholderImage(id));
+  const { ref, isInView } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id="gallery" className="py-16 md:py-32 bg-background">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="gallery" className="py-16 md:py-32 bg-background" ref={ref}>
+      <div className={cn("container mx-auto px-4 md:px-6 opacity-0", isInView && "fade-in-up")}>
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Our Gallery</h2>
           <p className="text-md sm:text-lg text-foreground/80 max-w-2xl mx-auto">
