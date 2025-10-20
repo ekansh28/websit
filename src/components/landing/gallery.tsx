@@ -9,7 +9,7 @@ const Gallery = () => {
   const galleryImages = galleryImageIds.map(id => getPlaceholderImage(id));
 
   return (
-    <section id="gallery" className="py-16 md:py-32 bg-background">
+    <section id="gallery" className="py-16 md:py-32 bg-background min-h-screen flex items-center">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold">Our Gallery</h2>

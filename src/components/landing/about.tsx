@@ -7,7 +7,7 @@ const About = () => {
   const aboutImage = getPlaceholderImage('about-img');
 
   return (
-    <section id="about" className="py-16 md:py-32 bg-card">
+    <section id="about" className="py-16 md:py-32 bg-card min-h-screen flex items-center">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="space-y-4 md:space-y-6">

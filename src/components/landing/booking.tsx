@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useLayoutEffect } from "react";
+import { useEffect, useRef, useLayoutEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useToast } from "@/hooks/use-toast";
 import { bookAppointment, type BookingState } from "@/app/actions";
@@ -17,19 +17,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { BOOKING_CONFIG } from "@/lib/config";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const services = [
-  "Hair Cut", "Spa", "Facial", "Hair Wash", "Hair Color", "Hair Treatment", "Wax", "Others",
-];
+const services = BOOKING_CONFIG.SERVICES;
 
 const generateTimeSlots = () => {
   const slots = [];
-  for (let hour = 9; hour < 22; hour++) {
-    slots.push(`${hour}:00`);
-    slots.push(`${hour}:30`);
+  const intervalMinutes = BOOKING_CONFIG.TIME_SLOT_INTERVAL;
+
+  for (let hour = BOOKING_CONFIG.START_HOUR; hour < BOOKING_CONFIG.END_HOUR; hour++) {
+    for (let minute = 0; minute < 60; minute += intervalMinutes) {
+      const timeString = `${hour}:${minute.toString().padStart(2, '0')}`;
+      slots.push(timeString);
+    }
   }
+
   return slots.map(time => {
     const [hourStr, minute] = time.split(':');
     const hour = parseInt(hourStr);
@@ -54,34 +58,190 @@ function SubmitButton() {
 const ScissorIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
+      width="120"
+      height="120"
+      viewBox="0 0 120 120"
       fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
       <defs>
-        <linearGradient id="sheen" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
-          <stop offset="50%" style={{ stopColor: '#dddddd', stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+        <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#E8E8E8" />
+          <stop offset="30%" stopColor="#FFFFFF" />
+          <stop offset="70%" stopColor="#C0C0C0" />
+          <stop offset="100%" stopColor="#A8A8A8" />
         </linearGradient>
+        <filter id="metalShadow">
+          <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3"/>
+        </filter>
       </defs>
-      <g className="scissor-group">
-        <circle cx="6" cy="6" r="3" stroke="url(#sheen)"></circle>
-        <circle cx="6" cy="18" r="3" stroke="url(#sheen)"></circle>
-        <g className="blade-1">
-          <line x1="8.12" y1="8.12" x2="12" y2="12" stroke="url(#sheen)"></line>
-          <line x1="12" y1="12" x2="22" y2="2" stroke="url(#sheen)"></line>
+
+      <style>
+        {`
+          .scissor-container {
+            transform-origin: 60px 60px;
+            animation: scissorEntry 2s ease-out;
+          }
+
+          .upper-blade {
+            transform-origin: 60px 60px;
+            animation: upperBladeSnap 2s ease-out;
+          }
+
+          .lower-blade {
+            transform-origin: 60px 60px;
+            animation: lowerBladeSnap 2s ease-out;
+          }
+
+          .cutting-line {
+            stroke-dasharray: 40;
+            stroke-dashoffset: 40;
+            animation: cuttingEffect 2s ease-out 1.5s;
+          }
+
+          @keyframes scissorEntry {
+            0% {
+              opacity: 0;
+              transform: scale(0.1) rotate(-45deg);
+            }
+            30% {
+              opacity: 1;
+              transform: scale(1.1) rotate(0deg);
+            }
+            40% {
+              transform: scale(1) rotate(0deg);
+            }
+            100% {
+              opacity: 1;
+              transform: scale(1) rotate(0deg);
+            }
+          }
+
+          @keyframes upperBladeSnap {
+            0%, 30% {
+              transform: rotate(-30deg);
+            }
+            45% {
+              transform: rotate(-35deg);
+            }
+            50% {
+              transform: rotate(-5deg);
+            }
+            55% {
+              transform: rotate(-40deg);
+            }
+            70% {
+              transform: rotate(-8deg);
+            }
+            75% {
+              transform: rotate(-45deg);
+            }
+            90% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(0deg);
+            }
+          }
+
+          @keyframes lowerBladeSnap {
+            0%, 30% {
+              transform: rotate(30deg);
+            }
+            45% {
+              transform: rotate(35deg);
+            }
+            50% {
+              transform: rotate(5deg);
+            }
+            55% {
+              transform: rotate(40deg);
+            }
+            70% {
+              transform: rotate(8deg);
+            }
+            75% {
+              transform: rotate(45deg);
+            }
+            90% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(0deg);
+            }
+          }
+
+          @keyframes cuttingEffect {
+            0% {
+              stroke-dashoffset: 40;
+              opacity: 0;
+            }
+            100% {
+              stroke-dashoffset: 0;
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
+
+      <g className="scissor-container" filter="url(#metalShadow)">
+        {/* Finger rings */}
+        <circle cx="25" cy="25" r="12" fill="none" stroke="url(#metalGradient)" strokeWidth="3" opacity="0.9"/>
+        <circle cx="25" cy="95" r="12" fill="none" stroke="url(#metalGradient)" strokeWidth="3" opacity="0.9"/>
+
+        {/* Handles */}
+        <rect x="20" y="37" width="10" height="20" fill="url(#metalGradient)" rx="2"/>
+        <rect x="20" y="63" width="10" height="20" fill="url(#metalGradient)" rx="2"/>
+
+        {/* Upper blade */}
+        <g className="upper-blade">
+          <path
+            d="M 35 45 L 60 60 L 100 20 L 95 15 L 60 50 L 35 40 Z"
+            fill="url(#metalGradient)"
+            stroke="#999"
+            strokeWidth="1"
+          />
+          <path
+            d="M 35 40 L 60 50 L 85 25"
+            fill="none"
+            stroke="#FFF"
+            strokeWidth="1"
+            opacity="0.7"
+          />
         </g>
-        <g className="blade-2">
-          <line x1="8.12" y1="15.88" x2="12" y2="12" stroke="url(#sheen)"></line>
-          <line x1="12" y1="12" x2="22" y2="22" stroke="url(#sheen)"></line>
+
+        {/* Lower blade */}
+        <g className="lower-blade">
+          <path
+            d="M 35 75 L 60 60 L 100 100 L 95 105 L 60 70 L 35 80 Z"
+            fill="url(#metalGradient)"
+            stroke="#999"
+            strokeWidth="1"
+          />
+          <path
+            d="M 35 80 L 60 70 L 85 95"
+            fill="none"
+            stroke="#FFF"
+            strokeWidth="1"
+            opacity="0.7"
+          />
         </g>
+
+        {/* Pivot screw */}
+        <circle cx="60" cy="60" r="3" fill="url(#metalGradient)" stroke="#777" strokeWidth="1"/>
+        <circle cx="60" cy="60" r="1.5" fill="#999"/>
+
+        {/* Cutting effect line */}
+        <line
+          x1="75"
+          y1="45"
+          x2="75"
+          y2="75"
+          className="cutting-line"
+          stroke="#FF6B6B"
+          strokeWidth="2"
+          opacity="0"
+        />
       </g>
     </svg>
 );
@@ -90,7 +250,9 @@ const ScissorIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const Booking = () => {
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
-  
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>(timeSlots);
+
   const initialState: BookingState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(bookAppointment, initialState);
 
@@ -110,6 +272,23 @@ const Booking = () => {
     }
   }, [state, toast]);
 
+  useEffect(() => {
+    const fetchAvailableSlots = async () => {
+      try {
+        const response = await fetch(`/api/available-slots?date=${selectedDate}`);
+        if (response.ok) {
+          const slots = await response.json();
+          setAvailableTimeSlots(slots);
+        }
+      } catch (error) {
+        console.error('Error fetching available slots:', error);
+        setAvailableTimeSlots(timeSlots);
+      }
+    };
+
+    fetchAvailableSlots();
+  }, [selectedDate]);
+
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scissorRef = useRef<SVGSVGElement>(null);
@@ -118,9 +297,16 @@ const Booking = () => {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       if (!containerRef.current || !scissorRef.current || !bookingSectionRef.current) return;
-      
+
       gsap.set(bookingSectionRef.current, { opacity: 0, y: 100 });
-      gsap.set(scissorRef.current, { scale: 0.1, opacity: 0, position: 'fixed', top: '50%', left: '50%', xPercent: -50, yPercent: -50 });
+      gsap.set(scissorRef.current, {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        xPercent: -50,
+        yPercent: -50,
+        zIndex: 1000
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -132,47 +318,14 @@ const Booking = () => {
         },
       });
 
-      tl.to(scissorRef.current, {
-        scale: 1,
-        opacity: 1,
-        ease: "power2.inOut",
-      }, 0);
+      // Show the scissor (it will animate automatically with CSS)
+      tl.set(scissorRef.current, { opacity: 1 }, 0);
 
-      tl.to(scissorRef.current.querySelector('.blade-1'), {
-          rotation: -15,
-          transformOrigin: "8px 8px",
-          repeat: 3,
-          yoyo: true,
-          ease: "power1.inOut"
-      }, 0.1);
-
-      tl.to(scissorRef.current.querySelector('.blade-2'), {
-          rotation: 15,
-          transformOrigin: "8px 16px",
-          repeat: 3,
-          yoyo: true,
-          ease: "power1.inOut"
-      }, 0.1);
-      
-      tl.to(scissorRef.current.querySelector('.blade-1'), {
-        rotation: -25,
-        transformOrigin: "8px 8px",
-        duration: 0.2,
-        ease: "power3.in"
-      }, ">-0.1");
-
-      tl.to(scissorRef.current.querySelector('.blade-2'), {
-        rotation: 25,
-        transformOrigin: "8px 16px",
-        duration: 0.2,
-        ease: "power3.in"
-      }, "<");
-
+      // Hide the scissor and show booking form
       tl.to(scissorRef.current, {
         opacity: 0,
-        scale: 1.2,
         duration: 0.3,
-      }, ">-0.1");
+      }, 2.5);
 
       tl.to(bookingSectionRef.current, {
         opacity: 1,
@@ -180,7 +333,6 @@ const Booking = () => {
         duration: 0.5,
         ease: "power2.out"
       }, "<");
-
 
     }, containerRef);
 
@@ -190,7 +342,7 @@ const Booking = () => {
   return (
     <>
       <div ref={containerRef} className="h-screen w-full bg-background relative" id="animation-container">
-         <ScissorIcon ref={scissorRef} className="w-24 h-24 md:w-32 md:h-32 text-white" />
+         <ScissorIcon ref={scissorRef} className="w-32 h-32 md:w-40 md:h-40" />
       </div>
 
       <section id="booking" ref={bookingSectionRef} className="py-16 md:py-32 bg-background">
@@ -210,10 +362,42 @@ const Booking = () => {
                           </div>
                         </div>
                         <div className="space-y-2 text-left">
-                          <Label htmlFor="contact">Contact Details</Label>
-                          <Input id="contact" name="contact" placeholder="Phone or Email" aria-describedby="contact-error"/>
+                          <Label htmlFor="contact">Phone Number</Label>
+                          <div className="flex">
+                            <div className="flex items-center px-3 border border-r-0 rounded-l-md bg-gray-100 text-gray-500 border-input">
+                              +91
+                            </div>
+                            <Input
+                              id="contact"
+                              name="contact"
+                              placeholder="10-digit phone number"
+                              maxLength={10}
+                              pattern="[0-9]{10}"
+                              className="rounded-l-none"
+                              aria-describedby="contact-error"
+                              onInput={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                target.value = target.value.replace(/[^0-9]/g, '');
+                              }}
+                            />
+                          </div>
                            <div id="contact-error" aria-live="polite" aria-atomic="true">
                               {state.errors?.contact && <p className="text-sm font-medium text-destructive">{state.errors.contact[0]}</p>}
+                          </div>
+                        </div>
+                        <div className="space-y-2 text-left">
+                          <Label htmlFor="date">Date</Label>
+                          <Input
+                            id="date"
+                            name="date"
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            min={new Date().toISOString().split('T')[0]}
+                            aria-describedby="date-error"
+                          />
+                           <div id="date-error" aria-live="polite" aria-atomic="true">
+                              {state.errors?.date && <p className="text-sm font-medium text-destructive">{state.errors.date[0]}</p>}
                           </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -242,7 +426,7 @@ const Booking = () => {
                                   <SelectValue placeholder="Select a time" />
                                 </SelectTrigger>
                               <SelectContent>
-                                  {timeSlots.map((slot) => (
+                                  {availableTimeSlots.map((slot) => (
                                   <SelectItem key={slot} value={slot}>
                                       {slot}
                                   </SelectItem>

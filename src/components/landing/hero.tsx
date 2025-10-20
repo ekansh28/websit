@@ -9,7 +9,7 @@ const Hero = () => {
   const heroImage = getPlaceholderImage('hero-bg');
 
   return (
-    <section id="home" className="relative w-full h-[90vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center text-center">
+    <section id="home" className="relative w-full h-screen min-h-[600px] flex items-center justify-center text-center overflow-hidden">
       {heroImage && (
         <Image
           src={heroImage.imageUrl}
