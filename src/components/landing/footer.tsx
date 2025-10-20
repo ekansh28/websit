@@ -28,6 +28,15 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-border/50 text-center">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
+            <Link href="/privacy" className="text-sm hover:text-white transition-colors underline">
+              Privacy Policy
+            </Link>
+            <span className="hidden sm:inline text-border/50">•</span>
+            <Link href="/admin" className="text-sm hover:text-white transition-colors underline">
+              Admin Dashboard
+            </Link>
+          </div>
           <p>&copy; {new Date().getFullYear()} DNA Salon. All Rights Reserved.</p>
         </div>
       </div>
